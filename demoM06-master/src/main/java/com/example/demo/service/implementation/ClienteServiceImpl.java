@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClienteServiceImpl implements IClienteService {
@@ -38,25 +39,49 @@ public class ClienteServiceImpl implements IClienteService {
 
     @Override
     public List<ClienteDTO> findAll() {
-        // Implement other methods as needed
-        return null;
+        ModelMapper modelMapper = new ModelMapper();
+
+        return this.clienteDAO.findAll()
+                .stream()
+                .map(entity -> modelMapper.map(entity, ClienteDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
     public ClienteDTO findById(Long id) {
-        // Implement other methods as needed
-        return null;
+        Optional<ClienteEntity> clienteEntity = this.clienteDAO.findById(id);
+
+        if (clienteEntity.isPresent()) {
+            ModelMapper modelMapper = new ModelMapper();
+            ClienteEntity currentCliente = clienteEntity.get();
+            return modelMapper.map(currentCliente, ClienteDTO.class);
+        } else {
+            return new ClienteDTO();
+        }
     }
 
     @Override
     public ClienteDTO createCliente(ClienteDTO clienteDTO) {
-        // Implement other methods as needed
-        return null;
+        try {
+            ModelMapper modelMapper = new ModelMapper();
+            ClienteEntity clienteEntity = modelMapper.map(clienteDTO, ClienteEntity.class);
+            this.clienteDAO.save(clienteEntity);
+            return clienteDTO;
+        } catch (Exception e) {
+            throw new UnsupportedOperationException("Error al guardar el cliente");
+        }
     }
 
     @Override
     public String deleteCliente(Long id) {
-        // Implement other methods as needed
-        return null;
+        Optional<ClienteEntity> clienteEntity = this.clienteDAO.findById(id);
+
+        if (clienteEntity.isPresent()) {
+            ClienteEntity currentClienteEntity = clienteEntity.get();
+            this.clienteDAO.delete(currentClienteEntity);
+            return "Cliente con ID " + id + " ha sido eliminado.";
+        } else {
+            return "El cliente con ID " + id + " no existe.";
+        }
     }
 }
