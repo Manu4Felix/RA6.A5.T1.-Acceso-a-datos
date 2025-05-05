@@ -15,7 +15,7 @@ public class ClienteEntity {
     private Long num_clie;
     private String empresa;
     @Column(name = "rep_clie")
-    private String repClie;
+    private Long repClie;
     @Column(name = "limite_credito")
-    private Double limiteCredito;
+    private Long limiteCredito;
 }

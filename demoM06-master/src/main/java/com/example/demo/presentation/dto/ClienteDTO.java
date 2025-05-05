@@ -10,6 +10,6 @@ import lombok.*;
 public class ClienteDTO {
     private Long numClie;
     private String empresa;
-    private String repClie;
-    private Double limiteCredito;
+    private Long repClie;
+    private Long limiteCredito;
 }
